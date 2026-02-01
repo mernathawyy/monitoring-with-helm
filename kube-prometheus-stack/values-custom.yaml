@@ -11,14 +11,11 @@ grafana:
   enabled: true
   adminUser: admin
   adminPassword: admin123
-
   service:
     type: NodePort
     nodePort: 32000
-
   persistence:
     enabled: false
-
   ingress:
     enabled: false
 
@@ -27,18 +24,40 @@ grafana:
 # ===============================
 prometheus:
   enabled: true
-
   prometheusSpec:
     serviceMonitorSelectorNilUsesHelmValues: false
 
-    # 🔥 Jenkins برّه Kubernetes
+    # 🔥 Jenkins External Scrape
     additionalScrapeConfigs:
       - job_name: "jenkins-external"
         metrics_path: /prometheus
         scrape_interval: 15s
         static_configs:
           - targets:
-              - host.minikube.internal:8080
+              - 192.168.137.168:8080
+
+    # 🔥 Jenkins Alert Rules
+    additionalPrometheusRules:
+      - name: jenkins-alerts
+        groups:
+          - name: jenkins.rules
+            rules:
+              - alert: JenkinsBuildFailed
+                expr: jenkins_job_builds_failed_total > 0
+                for: 1m
+                labels:
+                  severity: critical
+                annotations:
+                  summary: "Jenkins Build Failed"
+                  description: "One or more Jenkins builds have failed."
+              - alert: JenkinsBuildSuccess
+                expr: jenkins_job_builds_success_total > 0
+                for: 1m
+                labels:
+                  severity: info
+                annotations:
+                  summary: "Jenkins Build Succeeded"
+                  description: "One or more Jenkins builds succeeded."
 
     storageSpec:
       emptyDir: {}
@@ -59,8 +78,18 @@ kubeStateMetrics:
 # Alertmanager
 # ===============================
 alertmanager:
-  enabled: true
-  alertmanagerSpec:
-    storage:
-      emptyDir: {}
+  config:
+    global:
+      smtp_smarthost: 'smtp.gmail.com:587'
+      smtp_from: 'mernathawy211@gmail.com'
+      smtp_auth_username: 'mernathawy211@gmail.com'
+      smtp_auth_password: 'tbqe zwqb eigo vupk'
+    route:
+      receiver: 'email-alert'
+    receivers:
+      - name: 'email-alert'
+        email_configs:
+          - to: 'mernathawy211@gmail.com'
+            send_resolved: true
+
 

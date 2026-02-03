@@ -1,12 +1,9 @@
 # ===============================
-# Global Settings
+# Ultra-Light Config for Low Resources
 # ===============================
 global:
   storageClass: "standard"
 
-# ===============================
-# Grafana Settings
-# ===============================
 grafana:
   enabled: true
   adminUser: admin
@@ -16,51 +13,38 @@ grafana:
     nodePort: 32000
   persistence:
     enabled: false
-  ingress:
-    enabled: false
-  smtp:
-    enabled: true
-    host: smtp.gmail.com:587
-    user: mernathawy211@gmail.com
-# ===============================
-# Global Settings
-# ===============================
-global:
-  storageClass: "standard"
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 50m
+    limits:
+      memory: 256Mi
+      cpu: 200m
 
-# ===============================
-# Grafana Settings
-# ===============================
-grafana:
+prometheus:
   enabled: true
-  adminUser: admin
-  adminPassword: admin123
   service:
     type: NodePort
-    nodePort: 32000
-  persistence:
-    enabled: false
-  ingress:
-    enabled: false
-
-# ===============================
-# Prometheus Settings
-# ===============================
-prometheus:
-  enabled: true
+    nodePort: 30090
   prometheusSpec:
     serviceMonitorSelectorNilUsesHelmValues: false
-
-    # 🔥 Jenkins External Scrape
+    storageSpec:
+      emptyDir: {}
+    retention: 6h
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 100m
+      limits:
+        memory: 512Mi
+        cpu: 300m
     additionalScrapeConfigs:
       - job_name: "jenkins-external"
         metrics_path: /prometheus
-        scrape_interval: 15s
+        scrape_interval: 30s
         static_configs:
           - targets:
-              - 192.168.137.168:8080
-
-    # 🔥 Jenkins Alert Rules
+              - 192.168.1.32:8080
     additionalPrometheusRules:
       - name: jenkins-alerts
         groups:
@@ -68,159 +52,22 @@ prometheus:
             rules:
               - alert: JenkinsBuildFailed
                 expr: jenkins_job_builds_failed_total > 0
-                for: 1m
-                labels:
-                  severity: critical
-                annotations:
-# ===============================
-# Global Settings
-# ===============================
-global:
-  storageClass: "standard"
-
-# ===============================
-# Grafana Settings
-# ===============================
-grafana:
-  enabled: true
-  adminUser: admin
-  adminPassword: admin123
-  service:
-    type: NodePort
-    nodePort: 32000
-  persistence:
-    enabled: false
-  ingress:
-    enabled: false
-
-# ===============================
-# Prometheus Settings
-# ===============================
-prometheus:
-  enabled: true
-  prometheusSpec:
-    serviceMonitorSelectorNilUsesHelmValues: false
-
-    # 🔥 Jenkins External Scrape
-    additionalScrapeConfigs:
-      - job_name: "jenkins-external"
-        metrics_path: /prometheus
-        scrape_interval: 15s
-        static_configs:
-          - targets:
-              - 192.168.137.168:8080
-
-    # 🔥 Jenkins Alert Rules
-    additionalPrometheusRules:
-      - name: jenkins-alerts
-        groups:
-          - name: jenkins.rules
-            rules:
-              - alert: JenkinsBuildFailed
-                expr: jenkins_job_builds_failed_total > 0
-                for: 1m
-                labels:
-                  severity: critical
-                annotations:
-    password: "tbqe zwqb eigo vupk"  # هنا حطي App Password
-    fromAddress: mernathawy211@gmail.com
-    skipVerify: false
-    ehloIdentity: "localhost"
-    startTLS: true
-
-# ===============================
-# Prometheus Settings
-# ===============================
-prometheus:
-  enabled: true
-  prometheusSpec:
-    serviceMonitorSelectorNilUsesHelmValues: false
-
-    # 🔥 Jenkins External Scrape
-    additionalScrapeConfigs:
-      - job_name: "jenkins-external"
-        metrics_path: /prometheus
-        scrape_interval: 15s
-        static_configs:
-          - targets:
-              - 192.168.137.168:8080
-
-    # 🔥 Jenkins Alert Rules
-    additionalPrometheusRules:
-      - name: jenkins-alerts
-        groups:
-          - name: jenkins.rules
-            rules:
-              - alert: JenkinsBuildFailed
-                expr: jenkins_job_builds_failed_total > 0
-                for: 1m
+                for: 2m
                 labels:
                   severity: critical
                 annotations:
                   summary: "Jenkins Build Failed"
-                  description: "One or more Jenkins builds have failed."
-              - alert: JenkinsBuildSuccess
-                expr: jenkins_job_builds_success_total > 0
-                for: 1m
-                labels:
-                  severity: info
-                annotations:
-                  summary: "Jenkins Build Succeeded"
-                  description: "One or more Jenkins builds succeeded."
+                  description: "Jenkins build failed."
 
-      # 🔥 Test Alert لإرسال إيميل
-      - name: test-alerts
-        groups:
-          - name: test.rules
-            rules:
-              - alert: TestEmail
-                expr: vector(1)
-                for: 1m
-                labels:
-                  severity: critical
-                annotations:
-                  summary: "Test Alert"
-                  description: "This is a test alert to check email notifications."
-
-    storageSpec:
-      emptyDir: {}
-
-# ===============================
-# Node Exporter
-# ===============================
 nodeExporter:
-  enabled: true
+  enabled: false
 
-# ===============================
-# kube-state-metrics
-# ===============================
 kubeStateMetrics:
   enabled: true
 
-# ===============================
-# Alertmanager
-# ===============================
+
 alertmanager:
   enabled: true
-  config:
-    global:
-      resolve_timeout: 5m
-      smtp_smarthost: 'smtp.gmail.com:587'
-      smtp_from: 'mernathawy211@gmail.com'
-      smtp_auth_username: 'mernathawy211@gmail.com'
-      smtp_auth_password: 'tbqe zwqb eigo vupk'  # استبدلي بكلمة سر App Password من جيميل
-      smtp_require_tls: true
-
-    route:
-      receiver: email-alert
-      group_by: ['alertname']
-      group_wait: 30s
-      group_interval: 5m
-      repeat_interval: 12h
-
-    receivers:
-      - name: email-alert
-        email_configs:
-          - to: 'mernathawy211@gmail.com'
-            send_resolved: true
+  alertmanagerSpec:
+    configSecret: alertmanager-custom
 

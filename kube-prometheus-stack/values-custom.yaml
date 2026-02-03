@@ -20,7 +20,13 @@ grafana:
     limits:
       memory: 256Mi
       cpu: 200m
-
+  smtp:
+    enabled: true
+    host: smtp.gmail.com:587
+    user: mernathawy211@gmail.com
+    password: "rzqh dcqp wcpy lvny"
+    from_address: mernathawy211@gmail.com
+    skip_verify: false
 prometheus:
   enabled: true
   service:
@@ -44,21 +50,32 @@ prometheus:
         scrape_interval: 30s
         static_configs:
           - targets:
-              - 192.168.1.32:8080
+              - 13.218.126.254:8080
     additionalPrometheusRules:
       - name: jenkins-alerts
         groups:
           - name: jenkins.rules
             rules:
               - alert: JenkinsBuildFailed
-                expr: jenkins_job_builds_failed_total > 0
+                expr: jenkins_runs_failure_total > 0
                 for: 2m
                 labels:
                   severity: critical
                 annotations:
                   summary: "Jenkins Build Failed"
                   description: "Jenkins build failed."
-
+      - name: test-alert
+        groups:
+          - name: test.rules
+            rules:
+              - alert: AlwaysFiring
+                expr: vector(1)
+                for: 10s
+                labels:
+                  severity: warning
+                annotations:
+                  summary: "🔥 Test Alert"
+                  description: "This alert always fires for testing."
 nodeExporter:
   enabled: false
 

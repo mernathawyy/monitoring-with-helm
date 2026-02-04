@@ -9,7 +9,7 @@ grafana:
   adminUser: admin
   adminPassword: admin123
   service:
-    type: NodePort
+    type: LoadBalancer
     nodePort: 32000
   persistence:
     enabled: false
@@ -30,7 +30,7 @@ grafana:
 prometheus:
   enabled: true
   service:
-    type: NodePort
+    type: LoadBalancer
     nodePort: 30090
   prometheusSpec:
     serviceMonitorSelectorNilUsesHelmValues: false

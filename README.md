@@ -174,6 +174,11 @@ Before deploying to EKS, the setup was tested locally:
 3-Jenkins jobs triggered metric changes
 4-Alerts fired correctly
 
+
+<img width="1920" height="1028" alt="Screenshot 2026-02-01 123354" src="https://github.com/user-attachments/assets/72d56ae8-d7c2-405e-ae66-9200387ead9e" />
+
+<img width="1920" height="1028" alt="Screenshot 2026-02-01 123354" src="https://github.com/user-attachments/assets/b45bd734-0fab-4d66-8389-4a646527e5d3" />
+
 #### Multiple Jenkins dashboards were imported and validated
 
 ## ☁️ Step 4: Deploy to AWS EKS

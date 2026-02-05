@@ -175,9 +175,10 @@ Before deploying to EKS, the setup was tested locally:
 4-Alerts fired correctly
 
 
-<img width="1920" height="1028" alt="Screenshot 2026-02-01 123354" src="https://github.com/user-attachments/assets/72d56ae8-d7c2-405e-ae66-9200387ead9e" />
+<img width="1860" height="767" alt="image" src="https://github.com/user-attachments/assets/e0041920-3304-4f9a-80e3-fe1b5889d536" />
 
-<img width="1920" height="1028" alt="Screenshot 2026-02-01 123354" src="https://github.com/user-attachments/assets/b45bd734-0fab-4d66-8389-4a646527e5d3" />
+
+<img width="1920" height="1028" alt="jenkins2" src="https://github.com/user-attachments/assets/b7859cf1-cf68-4361-9a25-7069a8643270" />
 
 #### Multiple Jenkins dashboards were imported and validated
 
@@ -198,7 +199,19 @@ helm upgrade --install monitoring-stack ./ \
 5-Jenkins Jobs (Success / Failure / Duration)
 6-Resource Utilization (CPU, Memory)
 
-📸 Screenshots were taken for:
+
+<img width="1920" height="1020" alt="k1" src="https://github.com/user-attachments/assets/03b7fcb0-d926-4e4c-b0b9-268fbe599280" />
+
+<img width="1920" height="1020" alt="k2" src="https://github.com/user-attachments/assets/5af8c6e2-b0fc-497a-832d-020635f962cd" />
+
+<img width="1920" height="1020" alt="k3" src="https://github.com/user-attachments/assets/8e0b9fed-4670-4d00-9020-dcd6fee69314" />
+
+<img width="1920" height="1020" alt="k4" src="https://github.com/user-attachments/assets/8261d7ea-bdf7-41b2-a312-87a83e375205" />
+
+<img width="1920" height="1020" alt="k5" src="https://github.com/user-attachments/assets/8442ab19-00e1-4545-bb96-0544dd7d39e8" />
+
+<img width="1920" height="1020" alt="k6" src="https://github.com/user-attachments/assets/9b0e63c0-81f1-44c7-90d7-3d49571b37d7" />
+
 
 Cluster overview
 
@@ -206,7 +219,7 @@ Node metrics
 
 Pod metrics
 
-Jenkins dashboards
+
 
 ✅ Final Outcome
 
